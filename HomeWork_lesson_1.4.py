@@ -27,9 +27,9 @@ directories = {
     # m – move – команда, которая спросит номер документа и целевую полку и переместит его с текущей полки на целевую;
     # as – add shelf – команда, которая спросит номер новой полки и добавит ее в перечень;
 
-# def del_numb_input():
-#  del_number = str(input('Введите команду номер документа для удаления:'))
-#  return del_number
+def del_numb_input():
+ del_number = str(input('Введите команду номер документа для удаления:'))
+ return del_number
 
 def new_shelf_add(directories):
   new_shelf_enter = str(input('Введите № новой полки :'))
@@ -55,15 +55,15 @@ def transport (directories):
      print('Нет нужной полки, создайте ее')
   return directories
 
-def doc_del(documents):
- del_number2 = str(input('Введите номер документа для удаления из документов:'))
+def doc_del(del_number3):
+ del_number2 = del_number3
  for i,n in enumerate(documents):
    if del_number2 in n['number']:
     documents.pop(i)
  return documents
 
-def shelf_num_del(directories):
- del_number2 = str(input('Введите номер документа для удаления из документов из полок:'))
+def shelf_num_del(del_number3):
+ del_number2 = del_number3
  for i,n in directories.items():
   if del_number2 in n:
    n.remove(del_number2)
@@ -142,8 +142,9 @@ def main_low():
    new_shelf(directories)
    print(directories)
   elif c == chek_list[4]:
-   doc_del(documents)
-   shelf_num_del(directories)
+   del_number3 = del_numb_input()
+   doc_del(del_number3)
+   shelf_num_del(del_number3)
    print(documents)
    print(directories)
   elif c == chek_list[5]:
