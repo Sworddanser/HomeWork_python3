@@ -49,10 +49,9 @@ ing_amount = [] # перечень ингридиентов и блюд
 e = {} # словарь с новыми блюдами и ингридиентами
 dish_menu = [] # значения из файла по блюдам
 with open('test.txt') as f:  # вызыаем фаил
-  for line,text in enumerate(f):    
-    print(line,text)
-    if text == int():
-      print(text)
+  for line in f:    
+   dish = line.strip()
+   ing_amount.append(dish)
 
 def zzz():# функция информацию, кидает в список, каждый элемент списка содержит информацию по одному блюду.
   qwe = 2 + int(ing_amount[1])
