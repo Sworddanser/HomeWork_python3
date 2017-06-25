@@ -81,8 +81,7 @@ student = [{
 # если студентов несколько, где S - имя/имена студентов, Z - вычисляемое значение. 
 
 
-
-def mark_int(student):
+def mark_int (student):
 	mark_int_list=[]
 	for i, n in enumerate(student,start=1):
 	 hw_ave = sum(n['ДЗ'])/len(n['ДЗ'])
@@ -90,12 +89,14 @@ def mark_int(student):
 	 b = 0.6*hw_ave+0.4*ex
 	 n['Оценка'] = b
 	return student
-def max_grade (a):
+
+def max_grade ():
 	f = []
 	for i, n in enumerate(student,start=1):
 	 f.append(n['Оценка'])
 	g = max(f)
 	return g
+
 def name_l (g):
 	name = []
 	for n in student:
@@ -103,84 +104,57 @@ def name_l (g):
 	  name.append(n['Имя']+' '+n['Фамилия'])
 	return name
 
-def exp_r():
+def exp_r ():
 	exp = []
 	for each_student in student:
-	 for q in each_student['Опыт(да, нет)']:
-	 	if q not in exp:
-	 		exp.append(q)
+	 if each_student['Опыт(да, нет)'] not in exp:
+	 	exp.append(each_student['Опыт(да, нет)'])
 	return exp
-def hw_exp_y (exp):
-	homework_mark_list =[]
-	for each_student in student:
-		if exp[0] in each_student['Опыт(да, нет)']:
-		 for hw_mark in each_student['ДЗ']:
-		  homework_mark_list.append(hw_mark)
-	return homework_mark_list
-def ex_exp_y (exp):
+
+def ex_exp (exp):
 	exam_mark_list =[]
 	for each_student in student:
-	 if exp[0] in each_student['Опыт(да, нет)']:
-	 	exam_mark_list.append(each_student['ЭКЗАМЕН'])
-	return exam_mark_list
-def hw_exp_n (exp):
-	homework_mark_list =[]
-	for each_student in student:
-		if exp[1] in each_student['Опыт(да, нет)']:
-		 for hw_mark in each_student['ДЗ']:
-		  homework_mark_list.append(hw_mark)
-	return homework_mark_list
-def ex_exp_n (exp):
-	exam_mark_list =[]
-	for each_student in student:
-	 if exp[1] in each_student['Опыт(да, нет)']:
+	 if exp in each_student['Опыт(да, нет)']:
 	 	exam_mark_list.append(each_student['ЭКЗАМЕН'])
 	return exam_mark_list
 
-def male_hw_list():
+def hw_exp (exp):
 	homework_mark_list =[]
-	sex = 'М'
 	for each_student in student:
-	 if sex in each_student['Пол']:
-	  for hw_mark in each_student['ДЗ']:
-	   homework_mark_list.append(hw_mark)
+		if exp in each_student['Опыт(да, нет)']:
+		 for hw_mark in each_student['ДЗ']:
+		  homework_mark_list.append(hw_mark)
 	return homework_mark_list
-def male_ex_list():
-	exam_mark_list =[]
-	sex = 'М'
-	for each_student in student:
-	 	if sex in each_student['Пол']:
-	 	 exam_mark_list.append(each_student['ЭКЗАМЕН'])
-	return exam_mark_list
-def female_hw_list():
-	homework_mark_list =[]
-	sex = 'Ж'
-	for each_student in student:
-	 if sex in each_student['Пол']:
-	  for hw_mark in each_student['ДЗ']:
-	   homework_mark_list.append(hw_mark)
-	return homework_mark_list
-def female_ex_list():
-	exam_mark_list =[]
-	sex = 'Ж'
-	for each_student in student:
-	 	if sex in each_student['Пол']:
-	 	 exam_mark_list.append(each_student['ЭКЗАМЕН'])
-	return exam_mark_list
 
-def hm_list():
+def hm_list ():
 	homework_mark_list =[]
 	for each_student in student:
 		for hw_mark in each_student['ДЗ']:
-		  homework_mark_list.append(hw_mark)
+		  homework_mark_list.append(hw_mark)		
 	return homework_mark_list
-def ex_list():
+
+def ex_list ():
  exam_mark_list = list()
  for each_student in student:
   exam_mark_list.append(each_student['ЭКЗАМЕН'])
  return exam_mark_list
 
-def average(smth):
+def sex_ex_list (sex):
+	exam_mark_list = []
+	for each_student in student:
+	 	if sex in each_student['Пол']:
+	 	 exam_mark_list.append(each_student['ЭКЗАМЕН'])
+	return exam_mark_list
+
+def sex_hw_list (sex):
+	homework_mark_list = []
+	for each_student in student:
+	 if sex in each_student[ 'Пол' ]:
+	  for hw_mark in each_student[ 'ДЗ' ]:
+	   homework_mark_list.append(hw_mark)
+	return homework_mark_list
+
+def average (smth):
 	b = len(smth)
 	a = sum(smth)
 	c = a/b
@@ -189,6 +163,7 @@ def average(smth):
 def main_input ():
  comm = input('Введете команду (q,w,e,r):')
  return comm
+
 def main ():
 	while True:
 		c = main_input()
@@ -203,35 +178,37 @@ def main ():
 				print('Средняя оценка за экзамен:', round(c,1))
 				c = main_input()
 			elif c == 'w':
-				smth = male_hw_list()
-				c = average(smth)
+				sex = 'М'
+				arg = sex_hw_list(sex)
+				c = average(arg)
 				print('Средняя оценка за домашние задания у мужчин:', round(c,1))
-				smth = male_ex_list()
-				c = average(smth)
+				arg = sex_ex_list(sex)
+				c = average(arg)
 				print('Средняя оценка за экзамен у мужчин:', round(c,1))
-				smth = female_hw_list()
-				c = average(smth)
+				sex = 'Ж'
+				arg = sex_hw_list(sex)
+				c = average(arg)
 				print('Средняя оценка за домашние задания у женщин:', round(c,1))
-				smth = female_ex_list()
-				c = average(smth)
+				arg = sex_ex_list(sex)
+				c = average(arg)
 				print('Средняя оценка за экзамен у женщин:', round(c,1))
 			elif c == 'e':
 				exp = exp_r()
-				smth = hw_exp_y(exp)
-				c = average(smth)
+				expiri = hw_exp(exp[0])
+				c = average(expiri)
 				print('Средняя оценка за домашние задания у студентов с опытом:', round(c,1))
-				smth = ex_exp_y(exp)
-				c = average(smth)
+				expiri = ex_exp(exp[0])
+				c = average(expiri)
 				print('Средняя оценка за экзамен у студентов с опытом:', round(c,1))
-				smth = hw_exp_n(exp)
-				c = average(smth)
-				print('Средняя оценка за домашние задания у студентов без опыта:', round(c,1))
-				smth = ex_exp_n(exp)
-				c = average(smth)
+				expiri = hw_exp(exp[1])
+				c = average(expiri)
+				print('Средняя оценка за домашние задания у студентов без опыта:', round(c,1))				
+				expiri = ex_exp(exp[1])
+				c = average(expiri)
 				print('Средняя оценка за экзамен у студентов без опыта:', round(c,1))
 			elif c == 'r':
 				mark_int(student)
-				g = max_grade(student)
+				g = max_grade()
 				name = name_l(g)
 				if len(name) == 1:
 					print('Лучший студент: {} с интегральной оценкой {}'.format(' '.join(name),g))
@@ -239,4 +216,6 @@ def main ():
 					print('Лучшие студенты: {} с интегральной оценкой {}'.format(', '.join(name) ,g))
 		else:
 			break
-main()
+
+main ()
+
