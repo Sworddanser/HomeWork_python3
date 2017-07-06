@@ -1,4 +1,4 @@
-def cook_book_fun ():
+def get_default_cook_book():
   cook_book = {
       'яйчница': [
         {'ingridient_name': 'яйца', 'quantity': 2, 'measure': 'шт.'},
@@ -18,7 +18,8 @@ def cook_book_fun ():
       }
   return cook_book
 
-def upload_cook_book (cook_book):
+def upload_cook_book():
+  cook_book = {}
   with open('test.txt') as f:  # вызыаем фаил
     for line in f: 
       dish_name = line.strip()    
@@ -39,7 +40,6 @@ def get_shop_list_by_dishes(dishes, person_count, cook_book):
   for dish in dishes:
     for ingridient in cook_book[dish]:
       new_shop_list_item = dict(ingridient)
-
       new_shop_list_item['quantity'] *= person_count
       if new_shop_list_item['ingridient_name'] not in shop_list:
         shop_list[new_shop_list_item['ingridient_name']] = new_shop_list_item
@@ -54,9 +54,10 @@ def print_shop_list(shop_list):
 
 def create_shop_list():
   ans = input('Загрузить книгу рецептов(да,нет):')
-  if ans == 'да':
-    cook_book = cook_book_fun ()
-    cook_book = upload_cook_book(cook_book)
+  if ans == 'да':    
+    cook_book = upload_cook_book()
+  elif ans == 'нет':
+    cook_book = get_default_cook_book()
   person_count = int(input('Введите количество человек: '))
   dishes = input('Введите блюда в расчете на одного человека (через запятую): ') \
     .lower().split(', ')
