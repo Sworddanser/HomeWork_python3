@@ -41,23 +41,36 @@
 
 import glob
 import os.path
+import os
+
+
+# migrations = 'Migrations'
+# file_path = os.path.abspath(os.path.dirname(__file__))
+# files = glob.glob(os.path.join(file_path, migrations, "*.sql"))
+
 
 def file_glob():
-
 	migrations = 'Migrations'
+	os.chdir(os.path.abspath(os.path.dirname(__file__)))
 	file_path = os.path.abspath(os.path.dirname(__file__))
-	files = glob.glob(os.path.join(file_path, migrations, "*.sql"))
-	return files
+	all_files = os.listdir(os.path.join(file_path, migrations))
+	files = []
+	for file in all_files:
+		if 'sql' in file:
+			files.append(file)
+	return files, file_path
 
-def serch_fun(files,serch_item):
+
+def serch_fun(files, serch_item):	
 	files_next = []
 	for file in files:
-		with open (file) as file_for_read:
+		with open (os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Migrations', file) ) as file_for_read:
 			obj_for_serch_item = file_for_read.read()
 		if serch_item in obj_for_serch_item:
 			files_next.append(file)
-			print(file)
+			print(os.path.join('Migrations', file))
 	return files_next 
+
 
 def main_input(files):
 	serch_item = input('Введите слово для поиска, Владыка: ')
@@ -65,9 +78,10 @@ def main_input(files):
 	print('Всего: ', len(files_next))
 	return files_next 
 
+
 def main():
+	files = file_glob()	
 	while True:
-		files = file_glob()
 		files = main_input(files)
 		one = len(files)
 		if one <= 1:
@@ -77,5 +91,6 @@ def main():
 				files = file_glob()
 			else:
 				break
+
 
 main()
