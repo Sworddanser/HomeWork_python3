@@ -1,5 +1,6 @@
 import os.path
 import requests
+import math
 from xml.etree.ElementTree import fromstring
 
 # DIR_PATH = os.path.abspath(os.path.dirname(__file__))# для удобства
@@ -47,10 +48,10 @@ def math_sum(data, file_name):
     if file_name == 'travel.txt':
         for i in data:
             i[1] = ''.join(i[1].split(','))
-            sum += int(i[1])# почему не видит как число, я же убрал ',' которая делила число??????????
+            sum += int(float(i[1]))
     if file_name == 'temps.txt':
         for i in data:
-            sum += int(i[0])
+            sum += int(float(i[0]))
     return sum
 
 def math_ave(data, sum):
@@ -78,7 +79,7 @@ def convert_dist(sum):
     return float(list(list(list(tree)[0])[0])[0].text)
 
 
-def convert_temp(from_cur, to_cur, numb): # не принемает rounding выдает ошибку, что True не найдено в булевых значениях, хотя на сайте все работает?????????
+def convert_cur(from_cur, to_cur, numb): # не принемает rounding выдает ошибку, что True не найдено в булевых значениях, хотя на сайте все работает?????????
     response = requests.post(
         'http://fx.currencysystem.com/webservices/CurrencyServer4.asmx',
         headers = {'Content-Type': 'text/xml; charset=utf-8'},
@@ -86,13 +87,10 @@ def convert_temp(from_cur, to_cur, numb): # не принемает rounding в�
                     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
                       <soap:Body>
                         <ConvertToNum xmlns="http://webservices.cloanto.com/currencyserver/">
-                          <licenseKey>string</licenseKey>
                           <fromCurrency>{from_cur}</fromCurrency>
                           <toCurrency>{to_cur}</toCurrency>
                           <amount>{numb}</amount>
-                          <rounding>True</rounding>
-                          <date>string</date>
-                          <type>string</type>
+                          <rounding>1</rounding>
                         </ConvertToNum>
                       </soap:Body>
                     </soap:Envelope>
@@ -100,19 +98,19 @@ def convert_temp(from_cur, to_cur, numb): # не принемает rounding в�
     )
     tree = fromstring(response.text)
     el = list(list(list(tree)[0])[0])[0]
-    print(el.text)
     return float(list(list(list(tree)[0])[0])[0].text)
 
-data = file_open(file_path, file_name)
-for i in data:
-    print (i)
-
-bvn = convert_temp('USD','RUB', 100)
-print(bvn)
-
+def convertation(data):
+    total_cost = 0
+    for i in data:
+        print (i)
+        bvn = convert_cur(i[2],'RUB',i[1] )
+        total_cost += bvn
+        print('Стоимость билетов в рублях:', math.ceil(bvn))
+    return total_cost
 
 def main():
-    file_path = input('Введите путь до папки, и имя файла:')
+    file_path = input('Введите путь до папки:')
     file_name = input('Введите имя файла:')
     data = file_open(file_path, file_name)
     sum = math_sum(data, file_name)
@@ -123,11 +121,10 @@ def main():
     if file_name == 'travel.txt':
         dist = convert_dist(sum)
         print('Расстояние', round(dist, 2), 'км')
+    if file_name == 'currencies.txt':
+        cost = math.ceil(convertation(data))
+        print('Итоговая стоимость:',cost)
 
 
 main()
-
-
-
-
 
