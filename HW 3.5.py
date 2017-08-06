@@ -79,7 +79,7 @@ def convert_dist(sum):
     return float(list(list(list(tree)[0])[0])[0].text)
 
 
-def convert_cur(from_cur, to_cur, numb): # не принемает rounding выдает ошибку, что True не найдено в булевых значениях, хотя на сайте все работает?????????
+def convert_cur(from_cur, to_cur, numb):
     response = requests.post(
         'http://fx.currencysystem.com/webservices/CurrencyServer4.asmx',
         headers = {'Content-Type': 'text/xml; charset=utf-8'},
