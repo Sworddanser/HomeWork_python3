@@ -13,6 +13,7 @@ auth_data = {
 ########### - выше глобальные переменные для получения первичной информации для запуска яндес метрики
 TOKEN = 'AQAAAAAfNchVAARzp_6yVv8XQEvCkZ__CEqBYlo'
 
+# print('?'.join((AUTHORIZE_URL, urlencode(auth_data))))
 
 class YMBase:   # - данные для первичного запроса на сайтб где мы вводим уникальный токен, авторизация
     MANAGEMENT_URL = 'https://api-metrika.yandex.ru/management/v1/'
@@ -26,14 +27,12 @@ class YMBase:   # - данные для первичного запроса на
         }
 
 
-
 class YandexMetrika(YMBase):
 
     def __init__(self, token):
         self.token = token
 
     def get_counters(self, add):
-        self.add = add
         url = urljoin(self.MANAGEMENT_URL, 'counters')
         headers = self.get_headers()
         response = requests.get(url, headers=headers, params={'pretty': 1})
@@ -86,6 +85,6 @@ for counter in counters:
 counters = ym.get_counters('ym:s:pageviews')
 for counter in counters:
     print(counter.visits)
-    counters = ym.get_counters('ym:s:users')
+counters = ym.get_counters('ym:s:users')
 for counter in counters:
     print(counter.visits)
