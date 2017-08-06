@@ -11,69 +11,52 @@
 #
 # 2. Базовый класс должен определять общие характеристики и интерфейс.
 
-
-class Farm:
-    food = None
-    food_kg = 200
+class Farm_animals:
     owner = 'me'
+    food = None
     current_population = 0
     max_population = 500 #heads
-    food_need = 0
 
-    def __init__(self, population, food_need):
+    def __init__(self, population, food):
         self.current_population = population
-        self.food_need = food_need
+        self.food = food
 
-    def __name__(self):
-        pass
-
-    def brekfast(self, food_need):
-        self.food_kg -= food_need
-        print('Поели:', food_need, ', осталось:', self.food_kg)
-
-    def count(self,population):
-        self.current_population += population
+    def count(self):
         if self.current_population > self.max_population:
             print('перебор, продавай живность')
+        else:
+            print('Влезаем')
 
 
-class Cows(Farm):
+class Cows(Farm_animals):
     food = 'grass'
 
 
-class Sheeps(Farm):
+class Sheeps(Farm_animals):
     food = 'grass'
 
 
-class Goats(Farm):
+class Goats(Farm_animals):
     food = 'grass'
 
 
-class Pigs(Farm):
+class Pigs(Farm_animals):
     food = 'all'
 
 # Ducks, chickens, geese
 
-class Type(type):
-    pass
 
-Ducks = Type('Ducks', (Farm,), {})
-Chickens = Type('Ducks', (Farm,), {})
-Geese = Type('Ducks', (Farm,), {})
+Ducks = type('Ducks', (Farm_animals,), {'food': 'Sunflower seeds'})
+Chickens = type('Chickens', (Farm_animals,), {'food': 'Sunflower seeds'})
+Geese = type('Geese', (Farm_animals,), {'food': 'Oats'})
 
-duck = Ducks(20, 100)
+pupa = Cows(100, 'Grass')
+print(pupa.count())# не совсем понимаю откуда взялся None, вродебы он сидит в самом count, но не вижу его
 
+tom = Geese(501,'Oats')
+print(tom.count())
+print(tom.food)
 
-print(duck.food, duck.__name__(), duck.owner, duck.current_population, duck.max_population, duck.food_need)
-duck.brekfast(40)
-duck.count(50)
-print(duck.food, duck.food_kg, duck.owner, duck.current_population, duck.max_population, duck.food_need)
+print('Тут мы видим, что для Йорика, неободимо задать количество голов и еду, т.е. наследование работает')
+yorik = Ducks()
 
-cow = Cows(1000,1000)
-print(cow.food, cow.food_kg, cow.owner, cow.current_population, cow.max_population, cow.food_need)
-
-cow.brekfast(1000000)
-
-cow.count(2000)
-
-print(cow.food, cow.food_kg, cow.owner, cow.current_population, cow.max_population, cow.food_need)
