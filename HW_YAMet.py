@@ -28,7 +28,7 @@ class YMBase:   # - данные для первичного запроса на
         }
 
 
-class YandexMetrika(YMBase):
+class Metrika(YMBase):
 
     def __init__(self, token):
         self.token = token
@@ -63,7 +63,7 @@ class Counter(YMBase):
 
 
 
-ym = YandexMetrika(TOKEN)
+ym = Metrika(TOKEN)
 counters = ym.get_counters()
 
 for counter in counters:
