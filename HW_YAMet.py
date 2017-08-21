@@ -15,6 +15,7 @@ TOKEN = 'AQAAAAAfNchVAARzp_6yVv8XQEvCkZ__CEqBYlo'
 
 # print('?'.join((AUTHORIZE_URL, urlencode(auth_data))))
 
+
 class YMBase:   # - данные для первичного запроса на сайтб где мы вводим уникальный токен, авторизация
     MANAGEMENT_URL = 'https://api-metrika.yandex.ru/management/v1/'
     STAT_URL = 'https://api-metrika.yandex.ru/stat/v1/data'
@@ -32,59 +33,41 @@ class YandexMetrika(YMBase):
     def __init__(self, token):
         self.token = token
 
-    def get_counters(self, add):
+    def get_counters(self):
         url = urljoin(self.MANAGEMENT_URL, 'counters')
         headers = self.get_headers()
         response = requests.get(url, headers=headers, params={'pretty': 1})
         counters = response.json()['counters']
-        return [Counter(self.token, c['id'],add) for c in counters]
+        return [Counter(self.token, c['id']) for c in counters]
 
 
 class Counter(YMBase):
 
-    def __init__(self, token, counter_id, add):
+    def __init__(self, token, counter_id):
         self.token = token
         self.id = counter_id
-        self.add = add
-
-    def metrics1(self, add):
-        params = {
-            'id': self.id,
-            'metrics': add
-        }
-        return params
-
-    def data(self):
-        add = self.add
-        headers = self.get_headers()
-        params = self.metrics1(add)
-        response = requests.get(self.STAT_URL, params, headers=headers)
-        return response
 
     @property
-    def visits(self):
+    def metrics_data(self):
+        metrics = ['ym:s:visits', 'ym:s:pageviews', 'ym:s:users']
         eim = {}
-        add = self.add
-        if add == 'ym:s:visits':
-            response = self.data()
-            eim['visits'] = response.json()['data'][0]['metrics'][0]
-        elif add == 'ym:s:pageviews':
-            response = self.data()
-            eim['pageviews'] = response.json()['data'][0]['metrics'][0]
-        elif add == 'ym:s:users':
-            response = self.data()
-            eim['users'] = response.json()['data'][0]['metrics'][0]
+        for metric in metrics:
+            params = {
+                'id': self.id,
+                'metrics': metric
+            }
+            headers = self.get_headers()
+            response = requests.get(self.STAT_URL, params, headers=headers)
+            eim[metric] = response.json()['data'][0]['metrics'][0]
         return eim
 
 
 
 ym = YandexMetrika(TOKEN)
-counters = ym.get_counters('ym:s:visits')
+counters = ym.get_counters()
+
 for counter in counters:
-    print(counter.visits)
-counters = ym.get_counters('ym:s:pageviews')
-for counter in counters:
-    print(counter.visits)
-counters = ym.get_counters('ym:s:users')
-for counter in counters:
-    print(counter.visits)
+    pprint(counter.metrics_data)
+
+
+
